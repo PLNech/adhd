@@ -62,13 +62,15 @@
     --lavender: #A89BBF;
     --lavender-faint: #F5F3F8;
 
-    /* Semantic */
+    /* Semantic - Purple scale for results (non-alarming) */
     --sage: #7D9E83;
     --sage-faint: #EFF5F0;
-    --amber: #C9A962;
-    --amber-faint: #FBF8F0;
-    --rose: #C27878;
-    --rose-faint: #FDF5F5;
+    --purple-light: #B8A9C9;
+    --purple-light-faint: #F5F2F8;
+    --purple-mid: #9683A8;
+    --purple-mid-faint: #F0ECF5;
+    --purple-deep: #7B6B8A;
+    --purple-deep-faint: #EBE7F0;
 
     /* Spacing */
     --space-xs: 0.25rem;
@@ -636,16 +638,16 @@ main {
     border-left: 5px solid var(--paper-shadow);
 }
 
-.result-card.positive {
-    border-left-color: var(--rose);
+.result-card.high {
+    border-left-color: var(--purple-deep);
 }
 
-.result-card.negative {
+.result-card.low {
     border-left-color: var(--sage);
 }
 
 .result-card.moderate {
-    border-left-color: var(--amber);
+    border-left-color: var(--purple-mid);
 }
 
 .result-card h3 {
@@ -663,19 +665,19 @@ main {
     margin-bottom: var(--space-md);
 }
 
-.result-status.positive {
-    background: var(--rose-faint);
-    color: var(--rose);
+.result-status.high {
+    background: var(--purple-deep-faint);
+    color: var(--purple-deep);
 }
 
-.result-status.negative {
+.result-status.low {
     background: var(--sage-faint);
     color: var(--sage);
 }
 
 .result-status.moderate {
-    background: var(--amber-faint);
-    color: var(--amber);
+    background: var(--purple-mid-faint);
+    color: var(--purple-mid);
 }
 
 /* Score Grid */
@@ -733,11 +735,11 @@ main {
 }
 
 .progress-fill.high {
-    background: var(--rose);
+    background: var(--purple-deep);
 }
 
 .progress-fill.moderate {
-    background: var(--amber);
+    background: var(--purple-mid);
 }
 
 /* Interpretation */

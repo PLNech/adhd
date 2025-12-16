@@ -431,10 +431,10 @@ function scoreDIVA() {
     const meetsInattention = inattentionCount >= 5;
     const meetsHyperactivity = hyperactivityCount >= 5;
 
-    let presentation = "Sous le seuil diagnostique";
-    if (meetsInattention && meetsHyperactivity) presentation = "Combiné";
-    else if (meetsInattention) presentation = "Prédominance Inattentive";
-    else if (meetsHyperactivity) presentation = "Prédominance Hyperactive/Impulsive";
+    let presentation = "Sous les seuils cliniques";
+    if (meetsInattention && meetsHyperactivity) presentation = "Inattention + Hyperactivité/Impulsivité";
+    else if (meetsInattention) presentation = "Inattention prédominante";
+    else if (meetsHyperactivity) presentation = "Hyperactivité/Impulsivité prédominante";
 
     return {
         inattentionCount,
@@ -483,30 +483,34 @@ function renderResults() {
     const results = calculateResults();
     const container = document.getElementById('results-content');
 
+    const asrsLevel = results.asrs.screeningPositive ? 'high' : 'low';
+    const divaLevel = (results.diva.meetsInattention || results.diva.meetsHyperactivity) ? 'high' : 'low';
+    const efLevel = results.executive.severity === 'Élevé' ? 'high' : results.executive.severity === 'Modéré' ? 'moderate' : 'low';
+
     let html = `
         <div class="summary-card">
             <h2>Synthèse</h2>
             <p class="summary-text">
                 <strong>${results.global.positiveIndicators}/3</strong> outils d'évaluation suggèrent des symptômes
-                ${results.global.positiveIndicators >= 2 ? 'compatibles avec un TDAH' : 'à explorer davantage'}.
+                ${results.global.positiveIndicators >= 2 ? 'évocateurs, méritant une évaluation clinique' : 'à explorer si besoin'}.
             </p>
-            ${results.asrs.screeningPositive ? '<p>• ASRS: Dépistage <strong>POSITIF</strong></p>' : ''}
+            ${results.asrs.screeningPositive ? '<p>• ASRS: Seuil de dépistage <strong>atteint</strong></p>' : ''}
             ${results.diva.meetsInattention || results.diva.meetsHyperactivity ?
-                `<p>• Critères DSM-5: Présentation <strong>${results.diva.presentation}</strong></p>` : ''}
+                `<p>• Critères DSM-5: <strong>${results.diva.presentation}</strong></p>` : ''}
             ${results.executive.severity !== 'Faible' ?
                 `<p>• Fonctions exécutives: Difficultés de niveau <strong>${results.executive.severity}</strong></p>` : ''}
             <div class="recommendation">
                 <strong>Recommandation:</strong>
                 ${results.global.positiveIndicators >= 2
-                    ? "Une évaluation clinique par un spécialiste du TDAH adulte (psychiatre, neurologue) est recommandée. Apportez ce rapport lors de votre consultation."
+                    ? "Une évaluation clinique par un spécialiste (psychiatre, neurologue) est recommandée pour explorer ces symptômes. Apportez ce rapport lors de votre consultation."
                     : "Si ces difficultés impactent votre quotidien, une consultation pourrait être utile pour explorer les causes possibles."}
             </div>
         </div>
 
-        <div class="result-card ${results.asrs.screeningPositive ? 'positive' : 'negative'}">
+        <div class="result-card ${asrsLevel}">
             <h3>1. ASRS v1.1 — Dépistage OMS</h3>
-            <div class="result-status ${results.asrs.screeningPositive ? 'positive' : 'negative'}">
-                ${results.asrs.screeningPositive ? 'Dépistage POSITIF' : 'Dépistage négatif'}
+            <div class="result-status ${asrsLevel}">
+                Seuil ${results.asrs.screeningPositive ? 'atteint' : 'non atteint'}
                 (${results.asrs.partAShaded}/6 critères, seuil ≥4)
             </div>
             <div class="scores-grid">
@@ -543,9 +547,9 @@ function renderResults() {
             </div>
         </div>
 
-        <div class="result-card ${results.diva.meetsInattention || results.diva.meetsHyperactivity ? 'positive' : 'negative'}">
+        <div class="result-card ${divaLevel}">
             <h3>2. Critères DSM-5</h3>
-            <div class="result-status ${results.diva.meetsInattention || results.diva.meetsHyperactivity ? 'positive' : 'negative'}">
+            <div class="result-status ${divaLevel}">
                 ${results.diva.presentation}
             </div>
             <div class="scores-grid">
@@ -571,10 +575,10 @@ function renderResults() {
             ` : ''}
         </div>
 
-        <div class="result-card ${results.executive.severity === 'Élevé' ? 'positive' : results.executive.severity === 'Modéré' ? 'moderate' : 'negative'}">
+        <div class="result-card ${efLevel}">
             <h3>3. Fonctions Exécutives</h3>
-            <div class="result-status ${results.executive.severity === 'Élevé' ? 'positive' : results.executive.severity === 'Modéré' ? 'moderate' : 'negative'}">
-                Niveau: ${results.executive.severity} (${results.executive.percentage}%)
+            <div class="result-status ${efLevel}">
+                Niveau de difficulté: ${results.executive.severity} (${results.executive.percentage}%)
             </div>
             ${Object.entries(results.executive.clusterScores).map(([name, s]) => `
                 <div class="progress-item">
@@ -663,20 +667,20 @@ function generatePDF() {
     checkPage(50);
     addTitle('Synthèse des Résultats', 14);
     y += 3;
-    addText(`${results.global.positiveIndicators}/3 outils suggèrent des symptômes ${results.global.positiveIndicators >= 2 ? 'compatibles avec un TDAH' : 'à explorer'}.`);
+    addText(`${results.global.positiveIndicators}/3 outils suggèrent des symptômes ${results.global.positiveIndicators >= 2 ? 'évocateurs, méritant une évaluation clinique' : 'à explorer si besoin'}.`);
 
-    if (results.asrs.screeningPositive) addText('• ASRS: Dépistage POSITIF');
+    if (results.asrs.screeningPositive) addText('• ASRS: Seuil de dépistage atteint');
     if (results.diva.meetsInattention || results.diva.meetsHyperactivity)
-        addText(`• Critères DSM-5: Présentation ${results.diva.presentation}`);
+        addText(`• Critères DSM-5: ${results.diva.presentation}`);
     if (results.executive.severity !== 'Faible')
-        addText(`• Fonctions exécutives: Niveau ${results.executive.severity}`);
+        addText(`• Fonctions exécutives: Difficultés de niveau ${results.executive.severity}`);
     y += 5;
     addLine();
 
     // ASRS Results
     checkPage(40);
     addTitle('1. ASRS v1.1 (OMS/Harvard)', 12);
-    addText(`Résultat: ${results.asrs.screeningPositive ? 'POSITIF' : 'Négatif'} (${results.asrs.partAShaded}/6 critères)`);
+    addText(`Seuil: ${results.asrs.screeningPositive ? 'Atteint' : 'Non atteint'} (${results.asrs.partAShaded}/6 critères)`);
     addText(`Score total: ${results.asrs.total}/72 | Inattention: ${results.asrs.inattention}/36 | Hyperactivité: ${results.asrs.hyperactivity}/36`);
     y += 3;
 
@@ -727,6 +731,24 @@ function generatePDF() {
         doc.text(val === 1 ? 'Oui' : 'Non', pageWidth - margin - 15, y);
         y += qText.length * 4 + 2;
     });
+
+    // References page
+    doc.addPage();
+    y = 20;
+    addTitle('Références Scientifiques', 14);
+    addLine();
+    doc.setFontSize(10);
+    addText('1. Kessler RC, et al. (2005). The World Health Organization Adult ADHD Self-Report Scale (ASRS).');
+    addText('   Psychological Medicine, 35(2), 245-256. https://pubmed.ncbi.nlm.nih.gov/15841682/');
+    y += 3;
+    addText('2. American Psychiatric Association (2013). Diagnostic and Statistical Manual of Mental Disorders (5th ed.).');
+    addText('   https://www.psychiatry.org/psychiatrists/practice/dsm');
+    y += 3;
+    addText('3. Kooij JJS, et al. (2010). DIVA 2.0: Diagnostic Interview for ADHD in Adults.');
+    addText('   DIVA Foundation. https://www.divacenter.eu/');
+    y += 3;
+    addText('4. Brown TE (2013). A New Understanding of ADHD in Children and Adults.');
+    addText('   Executive Function Impairments. Routledge. https://pubmed.ncbi.nlm.nih.gov/24232170/');
 
     // Footer on each page
     const pageCount = doc.internal.getNumberOfPages();

@@ -184,15 +184,15 @@ def score_diva(responses: Dict[str, int]) -> DIVAResult:
     meets_hyperactivity = hyperactivity_count >= 5
     childhood_positive = childhood_symptoms >= 2
 
-    # Déterminer le type de présentation
+    # Déterminer le profil symptomatique (sans étiquetage diagnostique)
     if meets_inattention and meets_hyperactivity:
-        presentation = "Combiné (Inattentif + Hyperactif/Impulsif)"
+        presentation = "Inattention + Hyperactivité/Impulsivité"
     elif meets_inattention:
-        presentation = "Prédominance Inattentive"
+        presentation = "Inattention prédominante"
     elif meets_hyperactivity:
-        presentation = "Prédominance Hyperactive/Impulsive"
+        presentation = "Hyperactivité/Impulsivité prédominante"
     else:
-        presentation = "Sous le seuil diagnostique"
+        presentation = "Sous les seuils cliniques"
 
     # Interprétation
     criteria_met = []
