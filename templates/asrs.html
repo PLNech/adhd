@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}ASRS v1.1 - Évaluation TDAH{% endblock %}
+
+{% block content %}
+<div class="questionnaire-section">
+    <h2>ASRS v1.1 - Échelle d'auto-évaluation du TDAH adulte</h2>
+    <p class="source-info">
+        Source: Organisation Mondiale de la Santé (OMS) / Harvard Medical School<br>
+        <em>Kessler et al. (2005). Psychological Medicine, 35(2), 245-256.</em>
+    </p>
+
+    <div class="instructions">
+        <p>
+            Pour chaque question, indiquez à quelle fréquence vous avez ressenti ou agi
+            de cette manière au cours des <strong>6 derniers mois</strong>.
+        </p>
+    </div>
+
+    <form method="POST" id="asrs-form">
+        <div class="question-section">
+            <h3>Partie A - Questions de dépistage</h3>
+            <p class="section-note">Ces 6 questions sont les plus prédictives du TDAH.</p>
+
+            {% for question in part_a %}
+            <div class="question-card">
+                <p class="question-text">{{ loop.index }}. {{ question.text }}</p>
+                <div class="response-options">
+                    {% for value, label, score in options %}
+                    <label class="radio-option">
+                        <input type="radio" name="{{ question.id }}" value="{{ score }}"
+                               {% if responses.get(question.id) == score %}checked{% endif %} required>
+                        <span class="radio-label">{{ label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="question-section">
+            <h3>Partie B - Questions complémentaires</h3>
+            <p class="section-note">Ces questions apportent des informations supplémentaires sur vos symptômes.</p>
+
+            {% for question in part_b %}
+            <div class="question-card">
+                <p class="question-text">{{ loop.index + 6 }}. {{ question.text }}</p>
+                <div class="response-options">
+                    {% for value, label, score in options %}
+                    <label class="radio-option">
+                        <input type="radio" name="{{ question.id }}" value="{{ score }}"
+                               {% if responses.get(question.id) == score %}checked{% endif %} required>
+                        <span class="radio-label">{{ label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Continuer vers les critères DSM-5</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

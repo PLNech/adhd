@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - Évaluation TDAH Adulte{% endblock %}
+
+{% block content %}
+<div class="intro-section">
+    <h2>Bienvenue</h2>
+    <p>
+        Cette application vous permet de réaliser une auto-évaluation structurée des symptômes
+        du Trouble Déficit de l'Attention avec ou sans Hyperactivité (TDAH) chez l'adulte.
+    </p>
+
+    <div class="tools-overview">
+        <h3>Outils utilisés</h3>
+        <div class="tool-cards">
+            <div class="tool-card">
+                <h4>ASRS v1.1</h4>
+                <p>Adult ADHD Self-Report Scale</p>
+                <span class="badge">OMS / Harvard</span>
+                <p class="tool-desc">18 questions validées internationalement pour le dépistage du TDAH adulte.</p>
+            </div>
+            <div class="tool-card">
+                <h4>Critères DSM-5</h4>
+                <p>Évaluation structurée</p>
+                <span class="badge">APA 2013</span>
+                <p class="tool-desc">Évaluation des 18 critères diagnostiques officiels, incluant l'enfance.</p>
+            </div>
+            <div class="tool-card">
+                <h4>Fonctions Exécutives</h4>
+                <p>6 clusters cognitifs</p>
+                <span class="badge">Modèle de Brown</span>
+                <p class="tool-desc">Évaluation des difficultés d'attention, organisation, mémoire et régulation.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="warning-box">
+        <h3>Important - Veuillez lire attentivement</h3>
+        <ul>
+            <li><strong>Cette évaluation ne constitue PAS un diagnostic médical.</strong></li>
+            <li>Seul un professionnel de santé qualifié (psychiatre, neurologue) peut établir un diagnostic de TDAH.</li>
+            <li>Les résultats sont destinés à faciliter la discussion avec votre médecin.</li>
+            <li>Répondez honnêtement en pensant à votre fonctionnement habituel des 6 derniers mois.</li>
+            <li>Durée estimée: 15-20 minutes.</li>
+            <li>Vos réponses ne sont pas enregistrées sur un serveur externe.</li>
+        </ul>
+    </div>
+
+    <div class="consent-section">
+        <h3>Consentement</h3>
+        <form method="POST" action="{{ url_for('main.start') }}">
+            <label class="checkbox-label">
+                <input type="checkbox" id="consent" required>
+                Je comprends que cette auto-évaluation ne constitue pas un diagnostic médical et
+                que je dois consulter un professionnel de santé pour toute évaluation diagnostique.
+            </label>
+            <button type="submit" class="btn btn-primary">Commencer l'évaluation</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

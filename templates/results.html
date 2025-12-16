@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Résultats - Évaluation TDAH{% endblock %}
+
+{% block content %}
+<div class="results-section">
+    <h2>Résultats de votre évaluation</h2>
+
+    <div class="warning-box">
+        <strong>Rappel important:</strong> Ces résultats constituent une AUTO-ÉVALUATION et non un diagnostic médical.
+        Seul un professionnel de santé qualifié peut établir un diagnostic de TDAH.
+    </div>
+
+    <!-- Synthèse globale -->
+    <div class="summary-card">
+        <h3>Synthèse</h3>
+        <div class="summary-content">
+            <p style="white-space: pre-line;">{{ assessment.summary }}</p>
+        </div>
+        <div class="recommendation">
+            <strong>Recommandation:</strong> {{ assessment.clinical_recommendation }}
+        </div>
+    </div>
+
+    <!-- ASRS -->
+    <div class="result-card {% if asrs.screening_positive %}positive{% else %}negative{% endif %}">
+        <h3>1. ASRS v1.1 - Dépistage OMS</h3>
+        <div class="result-status">
+            {% if asrs.screening_positive %}
+            <span class="status-badge positive">Dépistage POSITIF</span>
+            {% else %}
+            <span class="status-badge negative">Dépistage négatif</span>
+            {% endif %}
+            <span class="score-info">{{ asrs.part_a_shaded_count }}/6 critères atteints (seuil: ≥4)</span>
+        </div>
+
+        <div class="scores-grid">
+            <div class="score-item">
+                <span class="score-label">Partie A (Screener)</span>
+                <span class="score-value">{{ asrs.part_a_score }}/24</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Partie B</span>
+                <span class="score-value">{{ asrs.part_b_score }}/48</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Total</span>
+                <span class="score-value">{{ asrs.total_score }}/72</span>
+            </div>
+        </div>
+
+        <div class="subscores">
+            <div class="subscore">
+                <span class="subscore-label">Inattention</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ (asrs.inattention_score / 36 * 100)|round }}%"></div>
+                </div>
+                <span class="subscore-value">{{ asrs.inattention_score }}/36</span>
+            </div>
+            <div class="subscore">
+                <span class="subscore-label">Hyperactivité/Impulsivité</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ (asrs.hyperactivity_score / 36 * 100)|round }}%"></div>
+                </div>
+                <span class="subscore-value">{{ asrs.hyperactivity_score }}/36</span>
+            </div>
+        </div>
+
+        <p class="interpretation">{{ asrs.interpretation }}</p>
+    </div>
+
+    <!-- DIVA / DSM-5 -->
+    <div class="result-card {% if diva.meets_inattention_criteria or diva.meets_hyperactivity_criteria %}positive{% else %}negative{% endif %}">
+        <h3>2. Critères DSM-5</h3>
+        <div class="result-status">
+            <span class="status-badge {% if diva.meets_inattention_criteria or diva.meets_hyperactivity_criteria %}positive{% else %}negative{% endif %}">
+                {{ diva.presentation_type }}
+            </span>
+        </div>
+
+        <div class="criteria-grid">
+            <div class="criterion {% if diva.meets_inattention_criteria %}met{% else %}not-met{% endif %}">
+                <span class="criterion-name">Inattention (A1)</span>
+                <span class="criterion-score">{{ diva.inattention_count }}/9</span>
+                <span class="criterion-threshold">≥5 requis</span>
+            </div>
+            <div class="criterion {% if diva.meets_hyperactivity_criteria %}met{% else %}not-met{% endif %}">
+                <span class="criterion-name">Hyperactivité/Impulsivité (A2)</span>
+                <span class="criterion-score">{{ diva.hyperactivity_count }}/9</span>
+                <span class="criterion-threshold">≥5 requis</span>
+            </div>
+            <div class="criterion {% if diva.childhood_positive %}met{% else %}not-met{% endif %}">
+                <span class="criterion-name">Début avant 12 ans (B)</span>
+                <span class="criterion-score">{% if diva.childhood_positive %}Confirmé{% else %}Non confirmé{% endif %}</span>
+            </div>
+            <div class="criterion {% if diva.impairment_domains|length >= 2 %}met{% else %}not-met{% endif %}">
+                <span class="criterion-name">Retentissement (C/D)</span>
+                <span class="criterion-score">{{ diva.impairment_domains|length }} domaine(s)</span>
+                <span class="criterion-threshold">≥2 requis</span>
+            </div>
+        </div>
+
+        {% if diva.impairment_domains %}
+        <div class="impairment-domains">
+            <strong>Domaines impactés:</strong> {{ diva.impairment_domains|join(', ') }}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Fonctions exécutives -->
+    <div class="result-card {% if exec_func.severity == 'Élevé' %}positive{% elif exec_func.severity == 'Modéré' %}moderate{% else %}negative{% endif %}">
+        <h3>3. Fonctions Exécutives</h3>
+        <div class="result-status">
+            <span class="status-badge {% if exec_func.severity == 'Élevé' %}positive{% elif exec_func.severity == 'Modéré' %}moderate{% else %}negative{% endif %}">
+                Niveau de difficulté: {{ exec_func.severity }}
+            </span>
+            <span class="score-info">Score total: {{ exec_func.total_score }}/{{ exec_func.max_score }}</span>
+        </div>
+
+        <div class="clusters-grid">
+            {% for cluster_name, scores in exec_func.cluster_scores.items() %}
+            <div class="cluster-item">
+                <span class="cluster-name">{{ cluster_name }}</span>
+                <div class="progress-bar">
+                    <div class="progress-fill {% if scores[1] > 0 and scores[0]/scores[1] >= 0.5 %}high{% endif %}"
+                         style="width: {{ (scores[0] / scores[1] * 100)|round if scores[1] > 0 else 0 }}%"></div>
+                </div>
+                <span class="cluster-score">{{ scores[0] }}/{{ scores[1] }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if exec_func.most_impaired_clusters %}
+        <div class="impaired-clusters">
+            <strong>Domaines les plus impactés:</strong> {{ exec_func.most_impaired_clusters|join(', ') }}
+        </div>
+        {% endif %}
+
+        <p class="interpretation">{{ exec_func.interpretation }}</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-section">
+        <a href="{{ url_for('main.download_pdf') }}" class="btn btn-primary btn-large">
+            Télécharger le rapport PDF complet
+        </a>
+        <p class="action-note">
+            Le rapport PDF inclut une synthèse pour le clinicien et les réponses détaillées en annexe.
+        </p>
+        <a href="{{ url_for('main.index') }}" class="btn btn-secondary">Recommencer l'évaluation</a>
+    </div>
+</div>
+{% endblock %}

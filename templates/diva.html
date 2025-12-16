@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Critères DSM-5 - Évaluation TDAH{% endblock %}
+
+{% block content %}
+<div class="questionnaire-section">
+    <h2>Évaluation selon les critères DSM-5</h2>
+    <p class="source-info">
+        Source: American Psychiatric Association (2013)<br>
+        <em>Diagnostic and Statistical Manual of Mental Disorders, 5th Edition</em>
+    </p>
+
+    <div class="instructions">
+        <p>
+            Répondez par <strong>Oui</strong> si le symptôme est présent de manière fréquente et persistante
+            depuis au moins <strong>6 mois</strong>, et qu'il interfère avec votre fonctionnement quotidien.
+        </p>
+    </div>
+
+    <form method="POST" id="diva-form">
+        <div class="question-section">
+            <h3>Critère A1 - Inattention</h3>
+            <p class="section-note">Pour les adultes, ≥5 symptômes sont requis pour ce critère.</p>
+
+            {% for question in inattention %}
+            <div class="question-card diva-card">
+                <p class="question-text">{{ loop.index }}. {{ question.text }}</p>
+                <div class="response-options binary-options">
+                    {% for value, label, score in options %}
+                    <label class="radio-option">
+                        <input type="radio" name="{{ question.id }}" value="{{ score }}"
+                               {% if responses.get(question.id) == score %}checked{% endif %} required>
+                        <span class="radio-label {% if score == 1 %}yes{% else %}no{% endif %}">{{ label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="question-section">
+            <h3>Critère A2 - Hyperactivité / Impulsivité</h3>
+            <p class="section-note">Pour les adultes, ≥5 symptômes sont requis pour ce critère.</p>
+
+            {% for question in hyperactivity %}
+            <div class="question-card diva-card">
+                <p class="question-text">{{ loop.index }}. {{ question.text }}</p>
+                <div class="response-options binary-options">
+                    {% for value, label, score in options %}
+                    <label class="radio-option">
+                        <input type="radio" name="{{ question.id }}" value="{{ score }}"
+                               {% if responses.get(question.id) == score %}checked{% endif %} required>
+                        <span class="radio-label {% if score == 1 %}yes{% else %}no{% endif %}">{{ label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="question-section">
+            <h3>Critère B - Symptômes dans l'enfance</h3>
+            <p class="section-note">
+                Le DSM-5 exige que plusieurs symptômes aient été présents avant l'âge de 12 ans.
+                Réfléchissez à votre fonctionnement durant l'école primaire.
+            </p>
+
+            {% for question in childhood %}
+            <div class="question-card diva-card">
+                <p class="question-text">{{ loop.index }}. {{ question.text }}</p>
+                <div class="response-options binary-options">
+                    {% for value, label, score in options %}
+                    <label class="radio-option">
+                        <input type="radio" name="{{ question.id }}" value="{{ score }}"
+                               {% if responses.get(question.id) == score %}checked{% endif %} required>
+                        <span class="radio-label {% if score == 1 %}yes{% else %}no{% endif %}">{{ label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="question-section">
+            <h3>Critères C/D - Retentissement fonctionnel</h3>
+            <p class="section-note">
+                Les symptômes doivent entraîner une gêne significative dans au moins 2 domaines de vie.
+            </p>
+
+            {% for question in impairment %}
+            <div class="question-card diva-card">
+                <p class="question-text">{{ loop.index }}. {{ question.text }}</p>
+                <div class="response-options binary-options">
+                    {% for value, label, score in options %}
+                    <label class="radio-option">
+                        <input type="radio" name="{{ question.id }}" value="{{ score }}"
+                               {% if responses.get(question.id) == score %}checked{% endif %} required>
+                        <span class="radio-label {% if score == 1 %}yes{% else %}no{% endif %}">{{ label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('main.asrs') }}" class="btn btn-secondary">Retour</a>
+            <button type="submit" class="btn btn-primary">Continuer vers les fonctions exécutives</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

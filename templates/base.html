@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Évaluation TDAH Adulte{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Auto-Évaluation TDAH Adulte</h1>
+            <p class="subtitle">Outils scientifiquement validés</p>
+        </div>
+    </header>
+
+    <nav class="progress-nav">
+        <div class="container">
+            <div class="progress-steps">
+                <div class="step {% if request.endpoint == 'main.index' %}active{% elif request.endpoint in ['main.asrs', 'main.diva', 'main.exec_functions', 'main.results'] %}completed{% endif %}">
+                    <span class="step-number">1</span>
+                    <span class="step-label">Accueil</span>
+                </div>
+                <div class="step {% if request.endpoint == 'main.asrs' %}active{% elif request.endpoint in ['main.diva', 'main.exec_functions', 'main.results'] %}completed{% endif %}">
+                    <span class="step-number">2</span>
+                    <span class="step-label">ASRS</span>
+                </div>
+                <div class="step {% if request.endpoint == 'main.diva' %}active{% elif request.endpoint in ['main.exec_functions', 'main.results'] %}completed{% endif %}">
+                    <span class="step-number">3</span>
+                    <span class="step-label">DSM-5</span>
+                </div>
+                <div class="step {% if request.endpoint == 'main.exec_functions' %}active{% elif request.endpoint == 'main.results' %}completed{% endif %}">
+                    <span class="step-number">4</span>
+                    <span class="step-label">Fonctions Exéc.</span>
+                </div>
+                <div class="step {% if request.endpoint == 'main.results' %}active{% endif %}">
+                    <span class="step-number">5</span>
+                    <span class="step-label">Résultats</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p class="disclaimer">
+                <strong>Avertissement:</strong> Cet outil est fourni à titre informatif uniquement et ne constitue pas un diagnostic médical.
+                Consultez un professionnel de santé qualifié pour toute évaluation diagnostique.
+            </p>
+            <p class="references">
+                Basé sur: ASRS v1.1 (OMS/Harvard), critères DSM-5 (APA), modèle des fonctions exécutives (Brown)
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

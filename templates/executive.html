@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Fonctions Exécutives - Évaluation TDAH{% endblock %}
+
+{% block content %}
+<div class="questionnaire-section">
+    <h2>Évaluation des Fonctions Exécutives</h2>
+    <p class="source-info">
+        Basé sur le modèle des fonctions exécutives de Brown (2013)<br>
+        <em>A New Understanding of ADHD in Children and Adults: Executive Function Impairments</em>
+    </p>
+
+    <div class="instructions">
+        <p>
+            Les fonctions exécutives sont les capacités cognitives qui nous permettent de gérer
+            notre attention, nos émotions et nos comportements. Indiquez à quel point chaque
+            difficulté est un problème pour vous <strong>actuellement</strong>.
+        </p>
+    </div>
+
+    <form method="POST" id="exec-form">
+        {% for cluster_id, cluster in clusters.items() %}
+        <div class="question-section">
+            <h3>{{ cluster.name }}</h3>
+
+            {% for question in cluster.questions %}
+            <div class="question-card exec-card">
+                <p class="question-text">{{ question.text }}</p>
+                <div class="response-options scale-options">
+                    {% for value, label, score in options %}
+                    <label class="radio-option">
+                        <input type="radio" name="{{ question.id }}" value="{{ score }}"
+                               {% if responses.get(question.id) == score %}checked{% endif %} required>
+                        <span class="radio-label">{{ label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <div class="form-actions">
+            <a href="{{ url_for('main.diva') }}" class="btn btn-secondary">Retour</a>
+            <button type="submit" class="btn btn-primary">Voir les résultats</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
