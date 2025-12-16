@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Auto-évaluation scientifique du TDAH chez l'adulte. Outils validés: ASRS (OMS), critères DSM-5, fonctions exécutives.">
+    <meta name="theme-color" content="#5B8A8A">
+    <title>Clarté — Auto-Évaluation TDAH Adulte</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="jspdf.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">◎</div>
+            </div>
+            <h1>Clarté</h1>
+            <p class="subtitle">Auto-évaluation TDAH pour adultes</p>
+        </div>
+    </header>
+
+    <nav class="progress-bar">
+        <div class="container">
+            <div class="progress-steps">
+                <div class="step-dot"></div>
+                <div class="step-connector"></div>
+                <div class="step-dot"></div>
+                <div class="step-connector"></div>
+                <div class="step-dot"></div>
+                <div class="step-connector"></div>
+                <div class="step-dot"></div>
+                <div class="step-connector"></div>
+                <div class="step-dot"></div>
+            </div>
+            <p class="progress-label">Accueil</p>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- HOME -->
+        <section id="home" class="section active">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Bienvenue</h2>
+                </div>
+                <p>
+                    Cette application vous permet de réaliser une auto-évaluation structurée
+                    des symptômes du <strong>Trouble Déficit de l'Attention avec ou sans Hyperactivité (TDAH)</strong>
+                    chez l'adulte, en utilisant des outils scientifiquement validés.
+                </p>
+
+                <div class="intro-grid">
+                    <div class="intro-card">
+                        <div class="intro-card-icon teal">📋</div>
+                        <div>
+                            <h4>ASRS v1.1</h4>
+                            <p>18 questions validées par l'OMS et Harvard pour le dépistage du TDAH adulte.</p>
+                        </div>
+                    </div>
+                    <div class="intro-card">
+                        <div class="intro-card-icon coral">🔬</div>
+                        <div>
+                            <h4>Critères DSM-5</h4>
+                            <p>Évaluation structurée des 18 critères diagnostiques officiels, incluant l'enfance.</p>
+                        </div>
+                    </div>
+                    <div class="intro-card">
+                        <div class="intro-card-icon lavender">🧠</div>
+                        <div>
+                            <h4>Fonctions Exécutives</h4>
+                            <p>6 domaines cognitifs selon le modèle de Brown: attention, mémoire, régulation.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notice warning">
+                    <h4>⚠️ Important — Veuillez lire attentivement</h4>
+                    <ul>
+                        <li><strong>Cette évaluation ne constitue PAS un diagnostic médical.</strong></li>
+                        <li>Seul un professionnel de santé qualifié (psychiatre, neurologue) peut établir un diagnostic de TDAH.</li>
+                        <li>Les résultats sont destinés à faciliter la discussion avec votre médecin.</li>
+                        <li>Répondez honnêtement en pensant à votre fonctionnement des <strong>6 derniers mois</strong>.</li>
+                        <li>Durée estimée: <strong>15-20 minutes</strong>.</li>
+                        <li>Vos données restent sur votre appareil et ne sont jamais transmises.</li>
+                    </ul>
+                </div>
+
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="consent">
+                    <span>
+                        Je comprends que cette auto-évaluation ne constitue pas un diagnostic médical
+                        et que je dois consulter un professionnel de santé pour toute évaluation diagnostique.
+                    </span>
+                </label>
+
+                <div style="text-align: center;">
+                    <button id="start-btn" class="btn btn-primary btn-large" disabled>
+                        Commencer l'évaluation
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ASRS -->
+        <section id="asrs" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>ASRS v1.1 — Échelle d'auto-évaluation</h2>
+                    <p class="source">Organisation Mondiale de la Santé / Harvard Medical School</p>
+                </div>
+
+                <div class="notice info">
+                    <p>
+                        Pour chaque question, indiquez à quelle fréquence vous avez ressenti ou agi
+                        de cette manière au cours des <strong>6 derniers mois</strong>.
+                    </p>
+                </div>
+
+                <div id="asrs-questions"></div>
+
+                <div class="actions">
+                    <div></div>
+                    <button id="asrs-next" class="btn btn-primary">
+                        Continuer →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- DIVA -->
+        <section id="diva" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Critères DSM-5</h2>
+                    <p class="source">American Psychiatric Association (2013)</p>
+                </div>
+
+                <div class="notice info">
+                    <p>
+                        Répondez <strong>Oui</strong> si le symptôme est présent de manière fréquente et persistante
+                        depuis au moins <strong>6 mois</strong>, et qu'il interfère avec votre fonctionnement.
+                    </p>
+                </div>
+
+                <div id="diva-questions"></div>
+
+                <div class="actions">
+                    <button id="diva-back" class="btn btn-secondary">
+                        ← Retour
+                    </button>
+                    <button id="diva-next" class="btn btn-primary">
+                        Continuer →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXECUTIVE FUNCTIONS -->
+        <section id="executive" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Fonctions Exécutives</h2>
+                    <p class="source">Basé sur le modèle de Brown (2013)</p>
+                </div>
+
+                <div class="notice info">
+                    <p>
+                        Les fonctions exécutives sont les capacités cognitives qui nous permettent de gérer
+                        notre attention, nos émotions et nos comportements. Indiquez à quel point chaque
+                        difficulté est un problème pour vous <strong>actuellement</strong>.
+                    </p>
+                </div>
+
+                <div id="executive-questions"></div>
+
+                <div class="actions">
+                    <button id="exec-back" class="btn btn-secondary">
+                        ← Retour
+                    </button>
+                    <button id="exec-next" class="btn btn-primary">
+                        Voir les résultats →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULTS -->
+        <section id="results" class="section">
+            <div class="notice warning">
+                <p>
+                    <strong>Rappel:</strong> Ces résultats constituent une AUTO-ÉVALUATION et non un diagnostic médical.
+                    Seul un professionnel de santé qualifié peut établir un diagnostic de TDAH.
+                </p>
+            </div>
+
+            <div id="results-content"></div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button id="download-pdf" class="btn btn-primary btn-large">
+                    📄 Télécharger le rapport PDF
+                </button>
+                <p style="color: var(--ink-light); font-size: 0.9rem; margin-top: 1rem;">
+                    Le rapport inclut une synthèse et les réponses détaillées pour votre médecin.
+                </p>
+                <button id="restart" class="btn btn-secondary" style="margin-top: 1rem;">
+                    Recommencer l'évaluation
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p class="disclaimer">
+                <strong>Avertissement:</strong> Cet outil est fourni à titre informatif uniquement.
+                Il ne constitue pas un diagnostic médical. Consultez un professionnel de santé qualifié.
+            </p>
+            <p>
+                Basé sur: ASRS v1.1 (OMS/Harvard) • Critères DSM-5 (APA 2013) • Modèle de Brown (2013)
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.8rem;">
+                <a href="https://github.com/PLNech/adhd" target="_blank">Code source</a> •
+                MIT License © 2025 PLNech
+            </p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
