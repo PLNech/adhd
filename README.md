@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://plnech.github.io/adhd/">Essayer en ligne</a> •
+  <a href="https://me.nech.pl/tdah/">Essayer en ligne</a> •
   <a href="#outils-inclus">Outils</a> •
   <a href="#utilisation">Utilisation</a> •
   <a href="docs/">Documentation</a>
@@ -45,7 +45,7 @@ Seul un professionnel de santé qualifié (psychiatre, neurologue) peut établir
 ## Utilisation
 
 ### Version Web (GitHub Pages)
-Accédez directement à l'application: **[plnech.github.io/adhd](https://plnech.github.io/adhd/)**
+Accédez directement à l'application: **[plnech.github.io/adhd](https://me.nech.pl/tdah/)**
 
 - Aucune installation requise
 - Données 100% locales (rien n'est transmis)
