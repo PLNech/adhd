@@ -45,7 +45,7 @@ Seul un professionnel de santé qualifié (psychiatre, neurologue) peut établir
 ## Utilisation
 
 ### Version Web (GitHub Pages)
-Accédez directement à l'application: **[plnech.github.io/adhd](https://me.nech.pl/tdah/)**
+Accédez directement à l'application: **[me.nech.pl/tdah](https://me.nech.pl/tdah/)**
 
 - Aucune installation requise
 - Données 100% locales (rien n'est transmis)
